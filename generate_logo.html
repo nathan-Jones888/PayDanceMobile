@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Logo Export</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: transparent;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 512px;
+      height: 512px;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+    }
+    #logo-container {
+      width: 512px;
+      height: 512px;
+    }
+  </style>
+</head>
+<body>
+  <div id="logo-container">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+      <defs>
+        <!-- 背景渐变：现代科技健康翡翠绿到深靛绿 -->
+        <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#10B981" />
+          <stop offset="50%" stop-color="#059669" />
+          <stop offset="100%" stop-color="#047857" />
+        </linearGradient>
+        
+        <!-- 科技感脉冲光晕 -->
+        <linearGradient id="glowGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#6EE7B7" stop-opacity="0.9" />
+          <stop offset="100%" stop-color="#10B981" stop-opacity="0.1" />
+        </linearGradient>
+
+        <!-- 盘子与高光渐变 -->
+        <linearGradient id="plateGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#FFFFFF" />
+          <stop offset="100%" stop-color="#F1F5F9" />
+        </linearGradient>
+
+        <!-- 瞳眸/智慧虹膜渐变 (体现“眸”与视觉AI) -->
+        <linearGradient id="eyeIrisGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#3B82F6" />
+          <stop offset="50%" stop-color="#10B981" />
+          <stop offset="100%" stop-color="#059669" />
+        </linearGradient>
+
+        <!-- 健康绿叶渐变 -->
+        <linearGradient id="leafGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#34D399" />
+          <stop offset="100%" stop-color="#059669" />
+        </linearGradient>
+
+        <!-- 卡路里/能量点渐变 -->
+        <linearGradient id="calorieGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F59E0B" />
+          <stop offset="100%" stop-color="#EF4444" />
+        </linearGradient>
+
+        <filter id="shadow" x="-10%" y="-10%" width="130%" height="130%">
+          <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#022c22" flood-opacity="0.4" />
+        </filter>
+
+        <filter id="plateShadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="#000000" flood-opacity="0.15" />
+        </filter>
+      </defs>
+
+      <!-- 圆角方形底座 (保留经典 APP/小程序 Icon 大圆角) -->
+      <rect width="512" height="512" rx="115" fill="url(#bgGrad)" />
+
+      <!-- 科技光晕装饰圆环 -->
+      <circle cx="256" cy="225" r="180" fill="none" stroke="url(#glowGrad)" stroke-width="4" stroke-dasharray="14 10" />
+      <circle cx="256" cy="225" r="155" fill="none" stroke="#A7F3D0" stroke-width="2" stroke-opacity="0.5" />
+
+      <!-- 主体白色餐盘 (外盘，体现“膳”) -->
+      <circle cx="256" cy="225" r="135" fill="url(#plateGrad)" filter="url(#plateShadow)" />
+      <circle cx="256" cy="225" r="110" fill="none" stroke="#E2E8F0" stroke-width="3" />
+      <circle cx="256" cy="225" r="98" fill="#F8FAFC" />
+
+      <!-- “智眸”视觉取景框 (4个智能扫描对焦点) -->
+      <!-- 左上 -->
+      <path d="M 175 180 L 175 158 A 10 10 0 0 1 185 148 L 207 148" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" />
+      <!-- 右上 -->
+      <path d="M 305 148 L 327 148 A 10 10 0 0 1 337 158 L 337 180" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" />
+      <!-- 左下 -->
+      <path d="M 175 270 L 175 292 A 10 10 0 0 0 185 302 L 207 302" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" />
+      <!-- 右下 -->
+      <path d="M 305 302 L 327 302 A 10 10 0 0 0 337 292 L 337 270" fill="none" stroke="#10B981" stroke-width="6" stroke-linecap="round" />
+
+      <!-- 智能扫描线 -->
+      <line x1="180" y1="225" x2="332" y2="225" stroke="#34D399" stroke-width="2.5" stroke-dasharray="6 6" opacity="0.85" />
+
+      <!-- 智眸外轮廓弧线 -->
+      <path d="M 198 225 C 222 182 290 182 314 225 C 290 268 222 268 198 225 Z" fill="none" stroke="#059669" stroke-width="4" stroke-linejoin="round" opacity="0.35" />
+
+      <!-- 眸中绿叶 (象征膳食与健康) -->
+      <path d="M 256 192 C 284 192 298 214 294 244 C 267 249 241 231 237 204 C 244 196 250 192 256 192 Z" fill="url(#leafGrad)" />
+      <path d="M 237 204 C 220 227 228 252 256 256 C 252 235 242 218 237 204 Z" fill="#047857" opacity="0.85" />
+      <!-- 脉络 / AI 神经元分支线 -->
+      <path d="M 240 208 Q 262 230 281 237" fill="none" stroke="#ECFDF5" stroke-width="2.5" stroke-linecap="round" />
+
+      <!-- 智慧光点 / 瞳孔焦点 -->
+      <circle cx="256" cy="225" r="13" fill="url(#eyeIrisGrad)" />
+      <circle cx="252" cy="221" r="4" fill="#FFFFFF" />
+
+      <!-- 控卡能量徽标 (右上角火苗徽章) -->
+      <g transform="translate(295, 150) scale(0.9)" filter="url(#plateShadow)">
+        <circle cx="20" cy="20" r="23" fill="#FFFFFF" />
+        <path d="M 20 8 C 22 14 28 17 28 23 C 28 28 24.5 32 20 32 C 15.5 32 12 28 12 23 C 12 18 16 14 20 8 Z" fill="url(#calorieGrad)" />
+        <path d="M 20 15 C 21 18 24 20 24 23 C 24 25.5 22 27.5 20 27.5 C 18 27.5 16 25.5 16 23 C 16 20 18 18 20 15 Z" fill="#FDE047" />
+      </g>
+
+      <!-- 底部品牌文字 -->
+      <text x="256" y="415" text-anchor="middle" font-family="'Microsoft YaHei', 'PingFang SC', sans-serif" font-size="34" font-weight="bold" fill="#FFFFFF" letter-spacing="4">膳眸智识</text>
+      <text x="256" y="448" text-anchor="middle" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="14" font-weight="600" fill="#D1FAE5" letter-spacing="5">DIETVISION AI</text>
+    </svg>
+  </div>
+</body>
+</html>

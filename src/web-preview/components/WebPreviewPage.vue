@@ -1,0 +1,91 @@
+<script setup lang="ts">
+// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-License-Identifier: AGPL-3.0-only
+//
+// Additional terms: see /legal/ADDITIONAL_TERMS.md
+import { computed, onBeforeUnmount, onMounted, ref } from "vue";
+import productLogoUrl from "../../../src-tauri/icons/icon.png";
+import { provideI18n } from "../../composables/useI18n";
+import {
+  appCopyright,
+  appEnglishName,
+  appName,
+  appVersion,
+  repositoryUrl,
+  windowsDownloadUrl,
+} from "../../lib/app-meta";
+import { readBrowserThemeMode } from "../../platform/settings-store.web";
+import WebPreviewFeatureStrip from "../WebPreviewFeatureStrip.vue";
+import { localeUrl, resolveWebLocale } from "../locale-routing";
+import WebPreviewFooter from "./WebPreviewFooter.vue";
+import WebPreviewHeroCopy from "./WebPreviewHeroCopy.vue";
+import WebPreviewShowcase from "./WebPreviewShowcase.vue";
+import WebPreviewTopbar from "./WebPreviewTopbar.vue";
+
+const baseUrl = import.meta.env.BASE_URL;
+const initialLocale = ref(resolveWebLocale(window.location.pathname, baseUrl));
+const { locale } = provideI18n(initialLocale);
+
+const shellClass = ref(`theme-${readBrowserThemeMode()}`);
+const isThemeReady = ref(false);
+const documentScrollClass = "is-web-preview-page";
+const productHomepageUrl = computed(() => localeUrl(locale.value, baseUrl));
+let themeReadyFrame = 0;
+
+const toggleDocumentScroll = (enabled: boolean) => {
+  document.documentElement.classList.toggle(documentScrollClass, enabled);
+  document.body.classList.toggle(documentScrollClass, enabled);
+};
+
+const markThemeReady = () => {
+  window.cancelAnimationFrame(themeReadyFrame);
+  themeReadyFrame = window.requestAnimationFrame(() => {
+    isThemeReady.value = true;
+  });
+};
+
+onMounted(() => {
+  document.documentElement.lang = locale.value;
+  toggleDocumentScroll(true);
+});
+onBeforeUnmount(() => {
+  window.cancelAnimationFrame(themeReadyFrame);
+  toggleDocumentScroll(false);
+});
+</script>
+
+<template>
+  <main
+    class="web-preview"
+    :class="[shellClass, { 'is-theme-booting': !isThemeReady }]"
+    :data-locale="locale"
+  >
+    <WebPreviewTopbar
+      :app-english-name="appEnglishName"
+      :app-name="appName"
+      :app-version="appVersion"
+      :product-homepage-url="productHomepageUrl"
+      :product-logo-url="productLogoUrl"
+    />
+
+    <section class="web-preview__hero" aria-label="PayDance Web Preview">
+      <WebPreviewHeroCopy
+        :repository-url="repositoryUrl"
+        :windows-download-url="windowsDownloadUrl"
+      />
+
+      <WebPreviewShowcase
+        @shell-class-change="shellClass = $event"
+        @theme-ready="markThemeReady"
+      />
+
+      <WebPreviewFeatureStrip />
+    </section>
+
+    <WebPreviewFooter
+      :app-copyright="appCopyright"
+      :app-english-name="appEnglishName"
+      :app-name="appName"
+    />
+  </main>
+</template>

@@ -1,0 +1,20 @@
+@import "./styles/foundation.css";
+@import "./styles/hero.css";
+@import "./styles/showcase.css";
+@import "./styles/responsive.css";
+
+@font-face {
+  font-family: "PayDance Web Sans";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/paydance-web-sans-subset.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "PayDance Web Serif";
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url("../assets/fonts/paydance-web-serif-subset.woff2") format("woff2");
+}

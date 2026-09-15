@@ -1,0 +1,231 @@
+name: Post-Release Smoke
+
+on:
+  workflow_run:
+    workflows: ["Release"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: smoke-${{ github.event.workflow_run.id }}
+  cancel-in-progress: false
+
+jobs:
+  smoke:
+    name: Verify release assets
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Resolve release tag from workflow artifact
+        run: |
+          mkdir -p /tmp/release-artifact /tmp/smoke
+          gh run download "${{ github.event.workflow_run.id }}" \
+            --repo ${{ github.repository }} \
+            --name pay-dance-windows-release \
+            --dir /tmp/release-artifact
+
+          MANIFEST_PATH=$(find /tmp/release-artifact -name release-manifest.json -print -quit)
+          if [ -z "$MANIFEST_PATH" ]; then
+            echo "ERROR: release-manifest.json was not found in the Release workflow artifact"
+            exit 1
+          fi
+
+          EXPECTED_TAG=$(jq -r '.tag // ""' "$MANIFEST_PATH")
+          if ! echo "$EXPECTED_TAG" | grep -Eq '^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$'; then
+            echo "ERROR: invalid EXPECTED_TAG from release manifest: $EXPECTED_TAG"
+            exit 1
+          fi
+
+          echo "EXPECTED_TAG=$EXPECTED_TAG" >> "$GITHUB_ENV"
+          echo "MANIFEST_PATH=$MANIFEST_PATH" >> "$GITHUB_ENV"
+          echo "Resolved expected release tag: $EXPECTED_TAG"
+
+      - name: Fetch expected release info
+        id: public_release
+        run: |
+          echo "=== Expected Release: $EXPECTED_TAG ==="
+          if ! gh release view "$EXPECTED_TAG" \
+            --repo ${{ github.repository }} \
+            --json tagName,name,publishedAt,assets |
+            tee expected-release.json; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "No public release exists for $EXPECTED_TAG; this was likely a dry-run build."
+            exit 0
+          fi
+
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
+      - name: Verify expected release exists
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          TAG=$(jq -r '.tagName // ""' expected-release.json)
+          echo "Expected release tag: $TAG"
+          if [ "$TAG" != "$EXPECTED_TAG" ]; then
+            echo "ERROR: expected $EXPECTED_TAG but GitHub returned $TAG"
+            exit 1
+          fi
+
+      - name: Verify critical assets exist
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          ASSETS=$(jq -r '.assets[].name' expected-release.json)
+          echo "Release assets:"
+          echo "$ASSETS"
+
+          echo "$ASSETS" | grep -q "windows-x64.exe$" \
+            || { echo "ERROR: portable EXE is missing"; exit 1; }
+
+          echo "$ASSETS" | grep -q "windows-x64.exe.sig$" \
+            || { echo "ERROR: updater signature (.sig) is missing"; exit 1; }
+
+          echo "$ASSETS" | grep -q "\.sha256$" \
+            || { echo "ERROR: SHA256 checksum file is missing"; exit 1; }
+
+          echo "$ASSETS" | grep -q "latest.json" \
+            || { echo "ERROR: latest.json is missing"; exit 1; }
+
+          echo "$ASSETS" | grep -q "release-manifest.json" \
+            || { echo "ERROR: release-manifest.json is missing"; exit 1; }
+
+          echo "All critical assets present."
+
+      - name: Verify SHA256 checksum
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          VERSION=$(echo "$EXPECTED_TAG" | sed 's/^v//')
+          EXE="pay-dance-v${VERSION}-windows-x64.exe"
+
+          gh release download "$EXPECTED_TAG" --repo ${{ github.repository }} --pattern "${EXE}" --dir /tmp/smoke --clobber
+          gh release download "$EXPECTED_TAG" --repo ${{ github.repository }} --pattern "${EXE}.sha256" --dir /tmp/smoke --clobber
+
+          cd /tmp/smoke
+          EXPECTED=$(cat "${EXE}.sha256" | awk '{print $1}')
+          ACTUAL=$(sha256sum "${EXE}" | awk '{print $1}')
+
+          if [ "$EXPECTED" != "$ACTUAL" ]; then
+            echo "ERROR: SHA256 mismatch"
+            echo "  expected: $EXPECTED"
+            echo "  actual:   $ACTUAL"
+            exit 1
+          fi
+          echo "SHA256 verified: $ACTUAL"
+
+      - name: Validate release manifest
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          VERSION=$(echo "$EXPECTED_TAG" | sed 's/^v//')
+          EXE="pay-dance-v${VERSION}-windows-x64.exe"
+
+          gh release download "$EXPECTED_TAG" --repo ${{ github.repository }} --pattern release-manifest.json --dir /tmp/smoke --clobber
+
+          cd /tmp/smoke
+          jq -e --arg tag "$EXPECTED_TAG" --arg version "$VERSION" --arg exe "$EXE" '
+            .tag == $tag and
+            .version == $version and
+            .assets.executable.name == $exe and
+            (.assets.executable.sha256 | type == "string" and length == 64) and
+            (.updater.signatureLength | type == "number" and . > 0) and
+            (.authenticodeStatus | type == "string" and length > 0)
+          ' release-manifest.json > /dev/null
+
+          cmp "$MANIFEST_PATH" release-manifest.json
+          echo "release-manifest.json matches the workflow artifact and expected tag."
+
+      - name: Validate latest.json structure
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          gh release download "$EXPECTED_TAG" --repo ${{ github.repository }} --pattern latest.json --dir /tmp/smoke --clobber
+
+          cd /tmp/smoke
+          if ! jq -e '.version' latest.json > /dev/null; then
+            echo "ERROR: latest.json missing 'version' field"
+            exit 1
+          fi
+          if ! jq -e '.platforms["windows-x86_64"].url' latest.json > /dev/null; then
+            echo "ERROR: latest.json missing platform download URL"
+            exit 1
+          fi
+          if ! jq -e '.platforms["windows-x86_64"].signature | type == "string" and length > 0' latest.json > /dev/null; then
+            echo "ERROR: latest.json missing non-empty platform signature"
+            exit 1
+          fi
+          echo "latest.json structure valid."
+
+      - name: Verify latest.json points at the checksummed asset
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          VERSION=$(echo "$EXPECTED_TAG" | sed 's/^v//')
+          EXE="pay-dance-v${VERSION}-windows-x64.exe"
+          EXPECTED_URL="https://github.com/${{ github.repository }}/releases/latest/download/${EXE}"
+
+          cd /tmp/smoke
+          URL=$(jq -r '.platforms["windows-x86_64"].url' latest.json)
+          if [ "$URL" != "$EXPECTED_URL" ]; then
+            echo "ERROR: latest.json points at unexpected asset URL"
+            echo "  expected: $EXPECTED_URL"
+            echo "  actual:   $URL"
+            exit 1
+          fi
+
+          EXPECTED_SHA=$(cat "${EXE}.sha256" | awk '{print $1}')
+          ACTUAL_SHA=$(sha256sum "${EXE}" | awk '{print $1}')
+          if [ "$EXPECTED_SHA" != "$ACTUAL_SHA" ]; then
+            echo "ERROR: latest.json asset SHA256 mismatch"
+            echo "  expected: $EXPECTED_SHA"
+            echo "  actual:   $ACTUAL_SHA"
+            exit 1
+          fi
+
+          ASSET_DIGEST=$(jq -r --arg name "$EXE" '.assets[] | select(.name == $name) | .digest // ""' "${{ github.workspace }}/expected-release.json")
+          if [ -n "$ASSET_DIGEST" ] && [ "$ASSET_DIGEST" != "null" ]; then
+            echo "GitHub asset digest: $ASSET_DIGEST"
+            NORMALIZED_DIGEST="${ASSET_DIGEST#sha256:}"
+            if [ "$NORMALIZED_DIGEST" != "$ACTUAL_SHA" ]; then
+              echo "ERROR: GitHub asset digest does not match downloaded executable"
+              echo "  expected: $NORMALIZED_DIGEST"
+              echo "  actual:   $ACTUAL_SHA"
+              exit 1
+            fi
+          else
+            echo "GitHub asset digest unavailable; SHA256 sidecar verified."
+          fi
+
+      - name: Verify latest.json download URL is accessible
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          URL=$(jq -r '.platforms["windows-x86_64"].url' /tmp/smoke/latest.json)
+          echo "Checking: $URL"
+          HTTP_CODE=$(curl -sL -o /dev/null -w "%{http_code}" "$URL")
+          if [ "$HTTP_CODE" -ne 200 ] && [ "$HTTP_CODE" -ne 302 ]; then
+            echo "ERROR: Download URL returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+          echo "Download URL accessible (HTTP $HTTP_CODE)."
+
+      - name: Verify README download link
+        if: steps.public_release.outputs.skip != 'true'
+        run: |
+          VERSION=$(echo "$EXPECTED_TAG" | sed 's/^v//')
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/latest/download/pay-dance-v${VERSION}-windows-x64.exe"
+          echo "Checking: $DOWNLOAD_URL"
+          HTTP_CODE=$(curl -sL -o /dev/null -w "%{http_code}" "$DOWNLOAD_URL")
+          if [ "$HTTP_CODE" -ne 200 ] && [ "$HTTP_CODE" -ne 302 ]; then
+            echo "ERROR: README download link returned HTTP $HTTP_CODE"
+            exit 1
+          fi
+          echo "Download link accessible (HTTP $HTTP_CODE)."

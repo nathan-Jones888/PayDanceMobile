@@ -1,0 +1,28 @@
+[package]
+name = "pay-dance"
+version = "0.9.9"
+description = "薪跳 · 桌面实时工资看板"
+authors = ["Mr.Baoboer"]
+license = "AGPL-3.0-only"
+repository = "https://github.com/MrBaoboer/PayDance"
+edition = "2024"
+
+[lib]
+name = "pay_dance_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+tauri-plugin-opener = "2.5.4"
+tauri-plugin-store = "2"
+tauri-plugin-process = "2"
+tauri-plugin-updater = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-autostart = "2"
+tauri-plugin-single-instance = "2"

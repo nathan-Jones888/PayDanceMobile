@@ -1,0 +1,43 @@
+# cargo-deny configuration for PayDance
+# https://embarkstudios.github.io/cargo-deny/
+
+[advisories]
+version = 2
+yanked = "deny"
+unmaintained = "workspace"
+unsound = "workspace"
+
+[licenses]
+# AGPL-3.0-only is the project license; allow compatible licenses
+allow = [
+  "AGPL-3.0-only",
+  "MIT",
+  "Apache-2.0",
+  "Apache-2.0 WITH LLVM-exception",
+  "BSD-3-Clause",
+  "ISC",
+  "Zlib",
+  "Unicode-3.0",
+  "CC0-1.0",
+  "Unlicense",
+  "MPL-2.0",
+  "CDLA-Permissive-2.0",
+]
+
+[[licenses.clarify]]
+name = "ring"
+expression = "ISC AND MIT AND OpenSSL"
+license-files = [{ path = "LICENSE", hash = 0xbd0eed23 }]
+
+[bans]
+# Tauri's cross-platform graph currently carries several intentional duplicate
+# crate versions. Keep cargo-deny warning-free while new duplicate policy is
+# handled during scheduled dependency updates.
+multiple-versions = "allow"
+deny = []
+skip = []
+
+[sources]
+unknown-registry = "deny"
+unknown-git = "deny"
+allow-git = []

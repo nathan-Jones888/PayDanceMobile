@@ -1,0 +1,367 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag to publish, for example v0.5.14"
+        required: true
+        type: string
+      dry_run:
+        description: "Build and upload artifacts but skip creating the GitHub Release"
+        required: false
+        default: true
+        type: boolean
+      allow_missing_ci_for_repair:
+        description: "Allow repairing an existing release whose old target commit has no CI run"
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: release-${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  windows-release:
+    name: Build Windows release
+    runs-on: windows-2025
+    env:
+      RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
+      DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.dry_run || 'false' }}
+      ALLOW_MISSING_CI_FOR_REPAIR: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.allow_missing_ci_for_repair || 'false' }}
+
+    steps:
+      - name: Validate tag format
+        shell: pwsh
+        run: |
+          $tag = "${{ env.RELEASE_TAG }}"
+          if ($tag -notmatch '^v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$') {
+            Write-Error "Invalid release tag: $tag"
+            exit 1
+          }
+
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ env.RELEASE_TAG }}
+
+      - name: Verify CI passed on the target commit
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $commitSha = (git rev-parse HEAD).Trim()
+          Write-Host "Target commit: $commitSha"
+
+          if ($env:ALLOW_MISSING_CI_FOR_REPAIR -eq "true") {
+            Write-Host "Skipping CI gate for existing release repair."
+            exit 0
+          }
+
+          $response = gh api --method GET `
+            "repos/${{ github.repository }}/actions/workflows/ci.yml/runs?head_sha=$commitSha&event=push&status=completed&per_page=20" |
+            ConvertFrom-Json
+
+          $passed = $response.workflow_runs | Where-Object {
+            $_.head_sha -eq $commitSha -and
+            $_.conclusion -eq "success"
+          }
+
+          if (-not $passed) {
+            Write-Error "No successful CI push run found for $commitSha. Refusing to release."
+            exit 1
+          }
+
+          Write-Host "CI passed for $commitSha."
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@4360b52568e2003a75bf9bc1d59f33a8e3fc893c # stable
+
+      - name: Cache Rust build
+        uses: Swatinem/rust-cache@6323deb102c322ba6fcbdcafc7e3dddab59af2b6 # v2.9.2
+        with:
+          workspaces: src-tauri -> target
+          cache-on-failure: true
+          shared-key: paydance-release-rust-windows
+          add-job-id-key: false
+
+      - name: Install frontend dependencies
+        run: npm ci
+
+      - name: Check version consistency
+        run: npm run version:check
+        env:
+          GITHUB_REF_NAME: ${{ env.RELEASE_TAG }}
+
+      - name: Build portable EXE (with updater signature)
+        run: npm run build:exe
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_UPDATER_PRIVKEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_UPDATER_PRIVKEY_PASSWORD }}
+
+      - name: Assert desktop frontend target
+        run: node scripts/assert-build-target.mjs desktop && node scripts/assert-build-boundary.mjs desktop
+
+      - name: Prepare versioned release assets
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_UPDATER_PRIVKEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_UPDATER_PRIVKEY_PASSWORD }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "${{ env.RELEASE_TAG }}".TrimStart("v")
+
+          # Portable EXE
+          $exePath = "src-tauri/target/release/pay-dance.exe"
+          $portableName = "pay-dance-v$version-windows-x64.exe"
+          $portablePath = "src-tauri/target/release/$portableName"
+          Copy-Item $exePath $portablePath -Force
+          $portableHash = (Get-FileHash $portablePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          "$portableHash  $portableName" | Out-File -Encoding ascii "$portablePath.sha256"
+
+          # The updater signs the exact portable EXE advertised in latest.json.
+          if (-not $env:TAURI_SIGNING_PRIVATE_KEY) {
+            Write-Error "TAURI_UPDATER_PRIVKEY secret is missing."
+            exit 1
+          }
+
+          npx tauri signer sign "$portablePath"
+
+          New-Item -ItemType Directory -Force -Path release-assets
+          $sigPath = "$portablePath.sig"
+          if (-not (Test-Path $sigPath)) {
+            Write-Error "Updater signature is missing: $sigPath"
+            exit 1
+          }
+
+          $sigContent = (Get-Content -LiteralPath $sigPath -Raw).Trim()
+          if (-not $sigContent) {
+            Write-Error "Updater signature is empty: $sigPath"
+            exit 1
+          }
+
+          $sigDest = "release-assets/$portableName.sig"
+          Copy-Item $sigPath $sigDest -Force
+
+      - name: Generate release notes
+        if: startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch'
+        run: node scripts/extract-release-notes.mjs --version "${{ env.RELEASE_TAG }}" --output release-notes.md
+
+      - name: Generate latest.json for updater
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "${{ env.RELEASE_TAG }}".TrimStart("v")
+          $sigFile = "release-assets/pay-dance-v$version-windows-x64.exe.sig"
+
+          if (-not (Test-Path $sigFile)) {
+            Write-Error "Updater signature is missing: $sigFile"
+            exit 1
+          }
+
+          $latestArgs = @("--version", $version, "--sig-file", $sigFile)
+          if (Test-Path release-notes.md) {
+            $latestArgs += @("--notes-file", "release-notes.md")
+          }
+
+          node scripts/release/build-latest-json.mjs @latestArgs |
+            Out-File -Encoding utf8 release-assets/latest.json
+
+      - name: Build artifact smoke
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "${{ env.RELEASE_TAG }}".TrimStart("v")
+          $portableName = "pay-dance-v$version-windows-x64.exe"
+          $portablePath = "src-tauri/target/release/$portableName"
+          $checksumPath = "$portablePath.sha256"
+          $signaturePath = "release-assets/$portableName.sig"
+          $latestPath = "release-assets/latest.json"
+          $reportPath = "release-assets/build-artifact-smoke.md"
+
+          "# Build artifact smoke" | Out-File -Encoding utf8 $reportPath
+          "Version: $version" | Out-File -Encoding utf8 -Append $reportPath
+          "" | Out-File -Encoding utf8 -Append $reportPath
+
+          Write-Host "Verify dry-run release assets"
+          foreach ($path in @($portablePath, $checksumPath, $signaturePath, $latestPath)) {
+            if (-not (Test-Path $path)) {
+              Write-Error "Missing release asset: $path"
+              exit 1
+            }
+          }
+
+          $expectedHash = ((Get-Content -LiteralPath $checksumPath -Raw).Trim() -split "\s+")[0].ToLowerInvariant()
+          $actualHash = (Get-FileHash $portablePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          if ($expectedHash -ne $actualHash) {
+            Write-Error "SHA256 mismatch for $portableName"
+            exit 1
+          }
+          "- EXE SHA256 verified: $actualHash" | Out-File -Encoding utf8 -Append $reportPath
+
+          Write-Host "Verify updater signature"
+          $signature = (Get-Content -LiteralPath $signaturePath -Raw).Trim()
+          if (-not $signature) {
+            Write-Error "Updater signature is empty: $signaturePath"
+            exit 1
+          }
+
+          $latest = Get-Content -LiteralPath $latestPath -Raw | ConvertFrom-Json
+          $platform = $latest.platforms.'windows-x86_64'
+          if (-not $platform) {
+            Write-Error "latest.json missing windows-x86_64 platform"
+            exit 1
+          }
+          if ($platform.signature -ne $signature) {
+            Write-Error "latest.json signature does not match the generated signature file"
+            exit 1
+          }
+          if ($platform.url -notlike "*$portableName") {
+            Write-Error "latest.json does not point to $portableName"
+            exit 1
+          }
+          "- Updater signature metadata verified." | Out-File -Encoding utf8 -Append $reportPath
+
+          $authenticode = Get-AuthenticodeSignature -LiteralPath $portablePath
+          "- Authenticode status: $($authenticode.Status)" | Out-File -Encoding utf8 -Append $reportPath
+
+      - name: Smoke test Windows executable
+        shell: pwsh
+        run: |
+          $version = "${{ env.RELEASE_TAG }}".TrimStart("v")
+          ./scripts/smoke-windows-exe.ps1 `
+            -ExePath "src-tauri/target/release/pay-dance-v$version-windows-x64.exe" `
+            -ReportPath "release-assets/paydance-exe-smoke-report.json"
+
+      - name: Generate release SBOM
+        uses: anchore/sbom-action@3ad7283483fc7af8ff2b4ea19663c2d5ca935e26 # v0.24.2
+        with:
+          artifact-name: pay-dance-sbom
+          format: spdx-json
+          output-file: release-assets/pay-dance-sbom.spdx.json
+          path: .
+          upload-artifact: false
+          upload-release-assets: false
+
+      - name: Generate release manifest
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = "Stop"
+          $version = "${{ env.RELEASE_TAG }}".TrimStart("v")
+          $portableName = "pay-dance-v$version-windows-x64.exe"
+          $portablePath = "src-tauri/target/release/$portableName"
+          $checksumPath = "$portablePath.sha256"
+          $signaturePath = "release-assets/$portableName.sig"
+          $latestPath = "release-assets/latest.json"
+          $sbomPath = "release-assets/pay-dance-sbom.spdx.json"
+          $smokeReportPath = "release-assets/paydance-exe-smoke-report.json"
+          $manifestPath = "release-assets/release-manifest.json"
+
+          foreach ($path in @($portablePath, $checksumPath, $signaturePath, $latestPath, $sbomPath, $smokeReportPath)) {
+            if (-not (Test-Path $path)) {
+              Write-Error "Missing release manifest input: $path"
+              exit 1
+            }
+          }
+
+          $portableHash = (Get-FileHash $portablePath -Algorithm SHA256).Hash.ToLowerInvariant()
+          $expectedHash = ((Get-Content -LiteralPath $checksumPath -Raw).Trim() -split "\s+")[0].ToLowerInvariant()
+          if ($portableHash -ne $expectedHash) {
+            Write-Error "Release manifest hash check failed for $portableName"
+            exit 1
+          }
+
+          $signature = (Get-Content -LiteralPath $signaturePath -Raw).Trim()
+          $latest = Get-Content -LiteralPath $latestPath -Raw | ConvertFrom-Json
+          $platform = $latest.platforms.'windows-x86_64'
+          $authenticode = Get-AuthenticodeSignature -LiteralPath $portablePath
+          $authenticodeSigner = $null
+          if ($authenticode.SignerCertificate) {
+            $authenticodeSigner = $authenticode.SignerCertificate.Subject
+          }
+
+          $manifest = [ordered]@{
+            schemaVersion = 1
+            tag = "${{ env.RELEASE_TAG }}"
+            version = $version
+            commit = (git rev-parse HEAD).Trim()
+            generatedAt = (Get-Date).ToUniversalTime().ToString("o")
+            assets = [ordered]@{
+              executable = [ordered]@{
+                name = $portableName
+                sha256 = $portableHash
+              }
+              checksum = [ordered]@{
+                name = "$portableName.sha256"
+                sha256 = (Get-FileHash $checksumPath -Algorithm SHA256).Hash.ToLowerInvariant()
+              }
+              updaterSignature = [ordered]@{
+                name = "$portableName.sig"
+                length = $signature.Length
+              }
+              latestJson = "latest.json"
+              sbom = "pay-dance-sbom.spdx.json"
+              smokeReport = "paydance-exe-smoke-report.json"
+            }
+            updater = [ordered]@{
+              platform = "windows-x86_64"
+              url = $platform.url
+              signatureLength = $signature.Length
+            }
+            authenticodeStatus = $authenticode.Status.ToString()
+            authenticodeSigner = $authenticodeSigner
+          }
+
+          $manifest | ConvertTo-Json -Depth 8 | Out-File -Encoding utf8 $manifestPath
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: pay-dance-windows-release
+          path: |
+            src-tauri/target/release/pay-dance-v*-windows-x64.exe
+            src-tauri/target/release/pay-dance-v*-windows-x64.exe.sha256
+            release-assets/pay-dance-v*-windows-x64.exe.sig
+            release-assets/latest.json
+            release-assets/build-artifact-smoke.md
+            release-assets/paydance-exe-smoke-report.json
+            release-assets/pay-dance-sbom.spdx.json
+            release-assets/release-manifest.json
+          if-no-files-found: error
+
+      - name: Create GitHub Release
+        if: (startsWith(github.ref, 'refs/tags/') || github.event_name == 'workflow_dispatch') && env.DRY_RUN != 'true'
+        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3.0.3
+        with:
+          name: 薪跳 PayDance ${{ env.RELEASE_TAG }}
+          tag_name: ${{ env.RELEASE_TAG }}
+          body_path: release-notes.md
+          fail_on_unmatched_files: true
+          files: |
+            src-tauri/target/release/pay-dance-v*-windows-x64.exe
+            src-tauri/target/release/pay-dance-v*-windows-x64.exe.sha256
+            release-assets/pay-dance-v*-windows-x64.exe.sig
+            release-assets/latest.json
+            release-assets/pay-dance-sbom.spdx.json
+            release-assets/release-manifest.json
+
+      - name: Dry run summary
+        if: env.DRY_RUN == 'true'
+        shell: pwsh
+        run: |
+          Write-Host "=== DRY RUN — no GitHub Release was created ==="
+          Write-Host "Artifacts were uploaded. Download them from the Actions run summary to verify."

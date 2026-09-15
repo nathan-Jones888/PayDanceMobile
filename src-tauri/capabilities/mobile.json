@@ -1,0 +1,18 @@
+{
+  "$schema": "../gen/schemas/mobile-schema.json",
+  "identifier": "mobile",
+  "description": "Minimal capability for the PayDance mobile app",
+  "platforms": ["android", "iOS"],
+  "permissions": [
+    {
+      "identifier": "opener:allow-open-url",
+      "allow": [{ "url": "https://github.com/MrBaoboer/PayDance" }]
+    },
+    "store:allow-delete",
+    "store:allow-get",
+    "store:allow-get-store",
+    "store:allow-load",
+    "store:allow-save",
+    "store:allow-set"
+  ]
+}

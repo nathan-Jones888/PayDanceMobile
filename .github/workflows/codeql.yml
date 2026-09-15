@@ -1,0 +1,103 @@
+name: CodeQL
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  schedule:
+    - cron: "23 2 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: codeql-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  changes:
+    name: Detect CodeQL change scope
+    runs-on: ubuntu-latest
+    outputs:
+      requires_full_ci: ${{ steps.scope.outputs.requires_full_ci }}
+      requires_codeql: ${{ steps.scope.outputs.requires_codeql }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: 24
+
+      - name: Detect change scope
+        id: scope
+        run: |
+          base="${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}"
+          head="${{ github.sha }}"
+          node scripts/ci-change-scope.mjs \
+            --base "$base" \
+            --head "$head" \
+            --github-output "$GITHUB_OUTPUT"
+
+  analyze:
+    name: Analyze ${{ matrix.language }}
+    needs: changes
+    if: github.event_name == 'schedule' || needs.changes.outputs.requires_codeql == 'true'
+    runs-on: windows-2025
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - javascript-typescript
+          - rust
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          build-mode: none
+          languages: ${{ matrix.language }}
+
+      - name: Analyze
+        uses: github/codeql-action/analyze@cdf488f595d80d6e07e03d4674febd5ab45fa938 # v4.37.9
+        with:
+          category: "/language:${{ matrix.language }}"
+
+  gate:
+    name: CodeQL gate
+    if: always()
+    needs:
+      - changes
+      - analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Verify all language scans
+        env:
+          CHANGES_RESULT: ${{ needs.changes.result }}
+          ANALYZE_RESULT: ${{ needs.analyze.result }}
+          REQUIRES_CODEQL: ${{ needs.changes.outputs.requires_codeql }}
+        run: |
+          if [ "$CHANGES_RESULT" != "success" ]; then
+            exit 1
+          fi
+
+          if [ "$REQUIRES_CODEQL" = "true" ]; then
+            test "$ANALYZE_RESULT" = "success"
+            exit
+          fi
+
+          if [ "$ANALYZE_RESULT" != "skipped" ] && [ "$ANALYZE_RESULT" != "success" ]; then
+            exit 1
+          fi

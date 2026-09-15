@@ -1,0 +1,92 @@
+@import "tailwindcss";
+@import "./styles/app-theme.css";
+@import "./styles/app-shell.css";
+
+:root {
+  --font-sans: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --font-dashboard:
+    "Segoe UI Variable Display", "Segoe UI Variable", "Bahnschrift", "Segoe UI",
+    system-ui, sans-serif;
+  --font-numeric: "Bahnschrift", "Segoe UI Variable", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+  font-family: var(--font-sans);
+}
+
+html.is-web-preview-page,
+body.is-web-preview-page,
+html.is-web-preview-page #app {
+  height: auto;
+  min-height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.mobile-app {
+  height: 100%;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--panel);
+  padding-top: env(safe-area-inset-top);
+  padding-right: env(safe-area-inset-right);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+}
+
+.mobile-app .app-window {
+  border-radius: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+:where(button, [role="button"]):focus-visible {
+  outline: 2px solid var(--focus-outline, var(--income-accent));
+  outline-offset: 3px;
+  box-shadow: 0 0 0 4px var(--focus-ring, var(--income-accent-ring));
+}
+
+/* Text fields draw their own ring on the wrapper (.field-input-wrap:focus-within), so the
+   native outline would double up. Checkboxes, radios, ranges and selects have no such
+   wrapper — stripping their outline left keyboard users with no focus indication at all. */
+:where(
+  input:is([type="text"], [type="number"], [type="time"], [type="search"]),
+  textarea
+):focus-visible {
+  outline: none;
+}
+
+:where(input:is([type="checkbox"], [type="radio"])):focus-visible {
+  outline: 2px solid var(--focus-outline, var(--income-accent));
+  outline-offset: 2px;
+}
+
+/* The main window is always-on-top and permanently visible, so an infinite decorative
+   animation (the progress-bar shine) never stops burning GPU time. Honour the OS
+   reduced-motion setting globally instead of per component: users who still want the
+   rolling digits have the explicit "amount animation" setting for that. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
