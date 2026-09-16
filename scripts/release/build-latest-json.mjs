@@ -57,7 +57,7 @@ if (!signature) {
 
 const portableUrl =
   getArg("--url") ??
-  `https://github.com/MrBaoboer/PayDance/releases/latest/download/pay-dance-v${version}-windows-x64.exe`;
+  `https://github.com/nathan-Jones888/PayDanceMobile/releases/latest/download/pay-dance-v${version}-windows-x64.exe`;
 
 const latestJson = {
   version: `v${version}`,

@@ -7,7 +7,7 @@ See [Governance](GOVERNANCE_EN.md) for decision rules.
 ## Current Maintainer
 
 - Javen
-- GitHub: <https://github.com/MrBaoboer>
+- GitHub: <https://github.com/nathan-Jones888>
 
 ## Triage Order
 

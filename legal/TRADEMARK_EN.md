@@ -60,8 +60,8 @@ Unacceptable name or identity examples:
 
 ## Official version statement
 
-Unless otherwise announced, official PayDance release channels are limited to the [MrBaoboer/PayDance repository](https://github.com/MrBaoboer/PayDance), its [GitHub Releases](https://github.com/MrBaoboer/PayDance/releases), the [Vercel website](https://paydance.vercel.app/), and the [GitHub Pages mirror](https://mrbaoboer.github.io/PayDance/). The Vercel website is canonical.
+Unless otherwise announced, official PayDance release channels are limited to the [nathan-Jones888/PayDanceMobile repository](https://github.com/nathan-Jones888/PayDanceMobile), its [GitHub Releases](https://github.com/nathan-Jones888/PayDanceMobile/releases), the [Vercel website](https://paydance.vercel.app/), and the [GitHub Pages mirror](https://nathan-Jones888.github.io/PayDanceMobile/). The Vercel website is canonical.
 
 ## Authorization
 
-To use the PayDance name, marks, or official release channels beyond factual reference, request written permission through the email listed on the [author's GitHub profile](https://github.com/MrBaoboer). Permission is granted case by case and may carry scope, term, territory, and presentation limits.
+To use the PayDance name, marks, or official release channels beyond factual reference, request written permission through the email listed on the [author's GitHub profile](https://github.com/nathan-Jones888). Permission is granted case by case and may carry scope, term, territory, and presentation limits.

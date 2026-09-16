@@ -22,7 +22,7 @@ Original documentation is released under [CC BY-SA 4.0](https://creativecommons.
 
 ## Commercial Licensing
 
-For closed-source integration, OEM, white-label, official brand licensing, or another non-AGPL license, request a separate license through the email listed on the [author's GitHub profile](https://github.com/MrBaoboer).
+For closed-source integration, OEM, white-label, official brand licensing, or another non-AGPL license, request a separate license through the email listed on the [author's GitHub profile](https://github.com/nathan-Jones888).
 
 ## Third-Party Components
 

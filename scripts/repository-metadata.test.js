@@ -254,7 +254,7 @@ describe("repository metadata", () => {
 
   it("keeps .github contributing governance links on canonical GitHub blob URLs", () => {
     const contributing = read(".github/CONTRIBUTING.md");
-    const githubBlobBase = "https://github.com/MrBaoboer/PayDance/blob/main";
+    const githubBlobBase = "https://github.com/nathan-Jones888/PayDanceMobile/blob/main";
 
     for (const path of [
       "CODE_OF_CONDUCT.md",
@@ -264,7 +264,7 @@ describe("repository metadata", () => {
     ]) {
       expect(contributing).toContain(`${githubBlobBase}/${path}`);
     }
-    expect(contributing).not.toContain("github.com/MrBaoboer/PayDance/blob/docs/");
+    expect(contributing).not.toContain("github.com/nathan-Jones888/PayDanceMobile/blob/docs/");
   });
 
   it("keeps issue templates independent of the current release version", () => {
@@ -314,7 +314,7 @@ describe("repository metadata", () => {
   });
 
   it("keeps maintainer contact guidance on the public GitHub profile email", () => {
-    const githubProfile = "https://github.com/MrBaoboer";
+    const githubProfile = "https://github.com/nathan-Jones888";
     const blockedContactPhrases = [
       ["提交", "历史", "中的", "邮箱"].join(""),
       ["email", "found", "in", "commit", "history"].join(" "),

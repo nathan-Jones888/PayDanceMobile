@@ -19,7 +19,7 @@
 
 ## 举报与执行
 
-请通过 [维护者 GitHub 主页](https://github.com/MrBaoboer) 公示的邮箱私下举报行为问题，不要提交公开 Issue。
+请通过 [维护者 GitHub 主页](https://github.com/nathan-Jones888) 公示的邮箱私下举报行为问题，不要提交公开 Issue。
 
 维护者可删除内容、关闭讨论、拒绝贡献，或临时、永久限制参与。举报详情只会在调查或处理所需的范围内共享。
 

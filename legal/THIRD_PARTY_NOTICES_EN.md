@@ -78,4 +78,4 @@ A subset is a Modified Version under the OFL, so these ship under the names `Pay
 
 ---
 
-To report an omission or error, open an [Issue](https://github.com/MrBaoboer/PayDance/issues).
+To report an omission or error, open an [Issue](https://github.com/nathan-Jones888/PayDanceMobile/issues).

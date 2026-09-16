@@ -22,7 +22,7 @@ PayDance 由 Javen 创建并维护，Copyright (C) 2026 Javen。本文汇总各�
 
 ## 商业授权
 
-如需闭源集成、OEM、白标、官方品牌授权或其他非 AGPL 授权，请通过[作者 GitHub 首页](https://github.com/MrBaoboer)公示的邮箱申请单独许可。
+如需闭源集成、OEM、白标、官方品牌授权或其他非 AGPL 授权，请通过[作者 GitHub 首页](https://github.com/nathan-Jones888)公示的邮箱申请单独许可。
 
 ## 第三方组件
 

@@ -12,7 +12,7 @@ Use the [Web Preview](https://paydance.vercel.app/en/) to try the interface and 
 
 ### Which file should I download?
 
-From the [latest Release](https://github.com/MrBaoboer/PayDance/releases/latest), download `pay-dance-v<version>-windows-x64.exe`. Verify it against the `.sha256` file on the same page:
+From the [latest Release](https://github.com/nathan-Jones888/PayDanceMobile/releases/latest), download `pay-dance-v<version>-windows-x64.exe`. Verify it against the `.sha256` file on the same page:
 
 ```powershell
 Get-FileHash .\pay-dance-v<version>-windows-x64.exe -Algorithm SHA256
@@ -25,14 +25,14 @@ The printed hash must match the one inside the `.sha256` file; case does not mat
 1. If auto-start was ever enabled, turn it off in Settings.
 2. Quit PayDance from the tray.
 3. Delete the EXE file.
-4. To also erase your salary settings, delete `%APPDATA%\com.masterbao.paydance\salary-settings.json`.
+4. To also erase your salary settings, delete `%APPDATA%\com.javen.paydance\salary-settings.json`.
 
 ### How do I open the first-run wizard again?
 
 Close the app, delete the local settings file, then start PayDance again:
 
 ```powershell
-Remove-Item "$env:APPDATA\com.masterbao.paydance\salary-settings.json"
+Remove-Item "$env:APPDATA\com.javen.paydance\salary-settings.json"
 ```
 
 ### Do Web Preview settings affect the desktop app?
@@ -65,7 +65,7 @@ No. PayDance has no account, cloud sync, telemetry, or advertising. Salary, work
 
 ### Where are settings stored?
 
-The Windows desktop app writes settings through Tauri Store to `%APPDATA%\com.masterbao.paydance\salary-settings.json`. That file holds your salary figures, so it counts as personal data. Delete it and the next launch starts from the first-run wizard.
+The Windows desktop app writes settings through Tauri Store to `%APPDATA%\com.javen.paydance\salary-settings.json`. That file holds your salary figures, so it counts as personal data. Delete it and the next launch starts from the first-run wizard.
 
 ## Desktop Capabilities
 

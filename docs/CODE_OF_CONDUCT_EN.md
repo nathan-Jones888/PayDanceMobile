@@ -19,7 +19,7 @@
 
 ## Reporting and Enforcement
 
-Report conduct concerns privately using the email published on the [maintainer's GitHub profile](https://github.com/MrBaoboer). Do not open a public Issue.
+Report conduct concerns privately using the email published on the [maintainer's GitHub profile](https://github.com/nathan-Jones888). Do not open a public Issue.
 
 The maintainer may remove content, close discussions, reject contributions, or temporarily or permanently restrict participation. Report details will be shared only when needed to investigate or act.
 

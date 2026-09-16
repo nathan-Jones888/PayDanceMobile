@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="../project_logo.png" alt="薪跳 PayDance" width="92">
+  <img src="../src-tauri/icons/icon.png" alt="薪跳 PayDance" width="92">
 </p>
 
 <h1 align="center">薪跳 PayDance</h1>

@@ -40,4 +40,4 @@ Modified distributions must use distinct branding: replace all of the assets abo
 
 ## Separate authorization
 
-For commercial promotion, courses, media kits, partnerships, OEM, white-label, or other uses beyond factual reference, request written authorization through the email listed on the [author's GitHub profile](https://github.com/MrBaoboer).
+For commercial promotion, courses, media kits, partnerships, OEM, white-label, or other uses beyond factual reference, request written authorization through the email listed on the [author's GitHub profile](https://github.com/nathan-Jones888).

@@ -4,7 +4,7 @@
   "version": "0.9.9",
   "author": "Javen",
   "license": "AGPL-3.0-only",
-  "repository": "github:MrBaoboer/PayDance",
+  "repository": "github:nathan-Jones888/PayDanceMobile",
   "type": "module",
   "scripts": {
     "dev": "vite --mode desktop",

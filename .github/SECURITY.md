@@ -16,8 +16,8 @@
 
 请不要通过公开 Issue 报告安全漏洞，改用以下任一私下渠道：
 
-- **GitHub 安全通告**（推荐）：在 [Security Advisories](https://github.com/MrBaoboer/PayDance/security/advisories/new) 提交
-- **电子邮件**：使用[作者 GitHub 首页](https://github.com/MrBaoboer)公示的邮箱，主题注明 `[SECURITY]`
+- **GitHub 安全通告**（推荐）：在 [Security Advisories](https://github.com/nathan-Jones888/PayDanceMobile/security/advisories/new) 提交
+- **电子邮件**：使用[作者 GitHub 首页](https://github.com/nathan-Jones888)公示的邮箱，主题注明 `[SECURITY]`
 
 报告中请包含漏洞描述、复现步骤、受影响版本，以及你已发现的缓解措施。
 

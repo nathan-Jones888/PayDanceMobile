@@ -6,7 +6,7 @@
   "permissions": [
     {
       "identifier": "opener:allow-open-url",
-      "allow": [{ "url": "https://github.com/MrBaoboer/PayDance" }]
+      "allow": [{ "url": "https://github.com/nathan-Jones888/PayDanceMobile" }]
     },
     "store:allow-delete",
     "store:allow-get",

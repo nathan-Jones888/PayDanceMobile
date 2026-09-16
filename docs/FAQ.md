@@ -12,7 +12,7 @@
 
 ### 该下载哪个文件？
 
-在 [最新 Release](https://github.com/MrBaoboer/PayDance/releases/latest) 里下载 `pay-dance-v<版本>-windows-x64.exe`。同一页面的 `.sha256` 文件用于核对完整性：
+在 [最新 Release](https://github.com/nathan-Jones888/PayDanceMobile/releases/latest) 里下载 `pay-dance-v<版本>-windows-x64.exe`。同一页面的 `.sha256` 文件用于核对完整性：
 
 ```powershell
 Get-FileHash .\pay-dance-v<版本>-windows-x64.exe -Algorithm SHA256
@@ -25,14 +25,14 @@ Get-FileHash .\pay-dance-v<版本>-windows-x64.exe -Algorithm SHA256
 1. 如果开启过开机自启动，先在设置中关闭。
 2. 从托盘退出应用。
 3. 删除 EXE 文件。
-4. 需要同时清除薪资设置时，删除 `%APPDATA%\com.masterbao.paydance\salary-settings.json`。
+4. 需要同时清除薪资设置时，删除 `%APPDATA%\com.javen.paydance\salary-settings.json`。
 
 ### 如何重新进入首次启动向导？
 
 关闭应用后删除本地配置文件，再重新启动：
 
 ```powershell
-Remove-Item "$env:APPDATA\com.masterbao.paydance\salary-settings.json"
+Remove-Item "$env:APPDATA\com.javen.paydance\salary-settings.json"
 ```
 
 ### Web Preview 的设置会影响桌面版吗？
@@ -65,7 +65,7 @@ Remove-Item "$env:APPDATA\com.masterbao.paydance\salary-settings.json"
 
 ### 配置保存在哪里？
 
-Windows 桌面版通过 Tauri Store 保存在 `%APPDATA%\com.masterbao.paydance\salary-settings.json`。这个文件包含你的薪资信息，属于个人数据。删除它之后，下一次启动会重新进入首次启动向导。
+Windows 桌面版通过 Tauri Store 保存在 `%APPDATA%\com.javen.paydance\salary-settings.json`。这个文件包含你的薪资信息，属于个人数据。删除它之后，下一次启动会重新进入首次启动向导。
 
 ## 桌面能力
 

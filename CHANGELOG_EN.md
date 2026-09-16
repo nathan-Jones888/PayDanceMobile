@@ -4,7 +4,7 @@
 
 This file records official PayDance releases and is the source of the GitHub Release notes.
 
-Build artifacts and verification files are available in [GitHub Releases](https://github.com/MrBaoboer/PayDance/releases).
+Build artifacts and verification files are available in [GitHub Releases](https://github.com/nathan-Jones888/PayDanceMobile/releases).
 
 ## Unreleased
 
@@ -15,7 +15,7 @@ Build artifacts and verification files are available in [GitHub Releases](https:
 ### v0.9.9
 
 - **Mini mode no longer occupies the taskbar**: entering mini floating mode drops the main window's taskbar button and leaving it restores the button; hiding to the tray and showing again re-drops it. The tray icon remains the way to bring the window back.
-- **Custom currency symbol**: Settings gains a Currency symbol field — type whatever symbol you want ($, €, £, ₩, HK$), or leave it empty for no symbol at all, with a live `88.68` preview beside the field. The default is still ¥, and existing installs keep it. It applies to the dashboard, estimated daily earnings, salary details, the mini window, and the salary input unit, and a screen reader announces the same symbol. No exchange-rate conversion ([#30](https://github.com/MrBaoboer/PayDance/issues/30)).
+- **Custom currency symbol**: Settings gains a Currency symbol field — type whatever symbol you want ($, €, £, ₩, HK$), or leave it empty for no symbol at all, with a live `88.68` preview beside the field. The default is still ¥, and existing installs keep it. It applies to the dashboard, estimated daily earnings, salary details, the mini window, and the salary input unit, and a screen reader announces the same symbol. No exchange-rate conversion ([#30](https://github.com/nathan-Jones888/PayDanceMobile/issues/30)).
 - **Fixed off-screen window recovery never running in shipped builds**: a window stranded by an unplugged monitor was never pulled back. The `available_monitors` and `primary_monitor` commands the recovery depends on had no permission grant, so the monitor list stayed empty and the on-screen check always answered yes. The permissions are now granted, and a new test fails the build whenever the frontend calls a window command with no matching grant.
 - **Fixed a destroyed main window leaving a zombie process**: closing the window with Alt+F4 or the taskbar context menu early in startup left an invisible process with an unresponsive tray, killable only from Task Manager. The titlebar "close to tray" button now really hides, the close interceptor registers as the first step of startup, and Rust exits cleanly if the main window is destroyed anyway.
 - **Tray menu follows the language**: the tray menu and tooltip always started in Chinese and only changed after manually switching language in Settings; the language restored at startup, or auto-detected from the system on a first run, now reaches the tray too.

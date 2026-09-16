@@ -7,11 +7,11 @@
 - 使用、隐私和许可问题：[常见问题](FAQ.md)
 - 版本变化：[更新日志](../CHANGELOG.md)
 - 功能范围：[产品边界](PRODUCT.md)
-- 已知问题：[GitHub Issues](https://github.com/MrBaoboer/PayDance/issues)
+- 已知问题：[GitHub Issues](https://github.com/nathan-Jones888/PayDanceMobile/issues)
 
 ## 提交反馈
 
-在 [Issue 选择页](https://github.com/MrBaoboer/PayDance/issues/new/choose) 使用对应表单：
+在 [Issue 选择页](https://github.com/nathan-Jones888/PayDanceMobile/issues/new/choose) 使用对应表单：
 
 - Bug：填写版本、发生位置、复现步骤、期望结果和实际结果。
 - 功能建议：说明使用场景和希望改善的结果。平台适配建议的验证边界要求见[贡献指南](../.github/CONTRIBUTING.md)。
@@ -25,4 +25,4 @@ Issue 是公开的。请勿附上薪资数据、`salary-settings.json`、私钥�
 
 ## 私下联系
 
-其他不适合公开讨论的项目事项，可使用 [Javen 的 GitHub 主页](https://github.com/MrBaoboer)公示的邮箱。
+其他不适合公开讨论的项目事项，可使用 [Javen 的 GitHub 主页](https://github.com/nathan-Jones888)公示的邮箱。

@@ -4,7 +4,7 @@ version = "0.9.9"
 description = "薪跳 · 桌面实时工资看板"
 authors = ["Javen"]
 license = "AGPL-3.0-only"
-repository = "https://github.com/MrBaoboer/PayDance"
+repository = "https://github.com/nathan-Jones888/PayDanceMobile"
 edition = "2024"
 
 [lib]

@@ -7,11 +7,11 @@ Before opening an Issue, check:
 - Usage, privacy, and licensing questions: [FAQ](FAQ_EN.md)
 - Release changes: [Changelog](../CHANGELOG_EN.md)
 - Feature scope: [Product Boundaries](PRODUCT_EN.md)
-- Known issues: [GitHub Issues](https://github.com/MrBaoboer/PayDance/issues)
+- Known issues: [GitHub Issues](https://github.com/nathan-Jones888/PayDanceMobile/issues)
 
 ## Open an Issue
 
-Choose the appropriate form on the [new Issue page](https://github.com/MrBaoboer/PayDance/issues/new/choose):
+Choose the appropriate form on the [new Issue page](https://github.com/nathan-Jones888/PayDanceMobile/issues/new/choose):
 
 - Bugs: include the version, affected surface, reproduction steps, expected result, and actual result.
 - Feature requests: describe the use case and desired outcome. For the validation boundary a platform adaptation must define, see the [Contributing Guide](CONTRIBUTING_EN.md).
@@ -25,4 +25,4 @@ Do not disclose vulnerabilities publicly. Follow the private process in the [Sec
 
 ## Private Contact
 
-For other project matters that should not be discussed publicly, use the email published on [Javen's GitHub profile](https://github.com/MrBaoboer).
+For other project matters that should not be discussed publicly, use the email published on [Javen's GitHub profile](https://github.com/nathan-Jones888).

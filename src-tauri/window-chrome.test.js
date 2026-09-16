@@ -143,7 +143,7 @@ describe("desktop window chrome", () => {
     );
 
     expect(openUrlPermission.allow).toEqual([
-      { url: "https://github.com/MrBaoboer/PayDance" },
+      { url: "https://github.com/nathan-Jones888/PayDanceMobile" },
     ]);
   });
 
