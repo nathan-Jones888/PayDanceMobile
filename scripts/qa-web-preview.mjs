@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -377,7 +377,7 @@ const assertDom = async (page, viewportName, locale) => {
 
   const footerText = await page.locator(".web-preview__footer").innerText();
   const legacyAuthor = ["Mr", "Ba" + "ober"].join(".");
-  if (!footerText.includes("Mr.Baoboer") || footerText.includes(legacyAuthor)) {
+  if (!footerText.includes("Javen") || footerText.includes(legacyAuthor)) {
     throw new Error(
       `${viewportName}: footer author attribution mismatch "${footerText}"`,
     );

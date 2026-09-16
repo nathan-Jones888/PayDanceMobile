@@ -2,11 +2,11 @@
 
 > [中文版 →](ADDITIONAL_TERMS.md)
 
-These are additional terms permitted under Section 7 of the GNU Affero General Public License version 3. They apply to PayDance software code materials copyrighted by Mr.Baoboer and released under AGPL-3.0-only.
+These are additional terms permitted under Section 7 of the GNU Affero General Public License version 3. They apply to PayDance software code materials copyrighted by Javen and released under AGPL-3.0-only.
 
 These terms do not prohibit use, study, modification, redistribution, or commercial use in compliance with AGPL-3.0-only. They preserve reasonable legal notices, require modification notices, prevent misrepresentation of origin, limit publicity use of the author's name, and reserve trademark rights.
 
-Copyright (C) 2026 Mr.Baoboer.
+Copyright (C) 2026 Javen.
 
 ---
 
@@ -16,10 +16,10 @@ Any redistribution of PayDance source code, object code, or a modified version c
 
 If the version provides an About view, Legal Notices view, settings footer, help page, or similar reasonably accessible interface, it must include the following notice or an equally clear notice with the same meaning:
 
-> Based on PayDance. Copyright (C) 2026 Mr.Baoboer.
+> Based on PayDance. Copyright (C) 2026 Javen.
 > Licensed under the GNU Affero General Public License v3.0 only.
 >
-> 基于 PayDance。版权所有 (C) 2026 Mr.Baoboer。
+> 基于 PayDance。版权所有 (C) 2026 Javen。
 > 采用 GNU Affero General Public License v3.0 only 许可。
 
 ## 2. Modification notice
@@ -28,7 +28,7 @@ Modified versions must reasonably and clearly state that they have been modified
 
 ## 3. No misrepresentation or false endorsement
 
-You may not state or imply that a modified version is produced, approved, sponsored, certified, or endorsed by Mr.Baoboer or the PayDance project unless you have received explicit prior written permission.
+You may not state or imply that a modified version is produced, approved, sponsored, certified, or endorsed by Javen or the PayDance project unless you have received explicit prior written permission.
 
 ## 4. Trademark rights reserved
 
@@ -38,7 +38,7 @@ Modified distributions must use a name and branding clearly distinguishable from
 
 ## 5. Publicity use of the author's name
 
-The author's name and the PayDance project name may be used for factual attribution, license notices, and source references, but not to promote a modified version as an official product or imply endorsement by or partnership with Mr.Baoboer or the PayDance project.
+The author's name and the PayDance project name may be used for factual attribution, license notices, and source references, but not to promote a modified version as an official product or imply endorsement by or partnership with Javen or the PayDance project.
 
 ---
 

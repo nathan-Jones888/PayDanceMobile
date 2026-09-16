@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -77,7 +77,7 @@ describe("PayDance Web Preview", () => {
     expect(runtimeSource).toContain('import.meta.env.MODE === "web"');
     expect(appSource).toContain('from "#runtime-app"');
     expect(appSource).not.toContain('import("./WebPreviewApp.vue")');
-    expect(appSource).not.toContain('import("./DesktopApp.vue")');
+    expect(appSource).not.toContain('import("./desktop/DesktopApp.vue")');
     expect(read("vite.config.ts")).toContain("#runtime-app");
   });
 
@@ -148,10 +148,10 @@ describe("PayDance Web Preview", () => {
     expect(chineseHtmlSource).toContain("薪跳 PayDance 三步设置界面");
     expect(englishHtmlSource).toContain("PayDance three-step setup");
     expect(chineseHtmlSource).toContain(
-      "<title>薪跳 PayDance — Windows 桌面实时工资看板</title>",
+      "<title>薪跳 PayDance — 手机端实时工资看板</title>",
     );
     expect(englishHtmlSource).toContain(
-      "<title>PayDance — Real-Time Salary Dashboard for Windows</title>",
+      "<title>PayDance — Mobile Real-Time Wage Dashboard</title>",
     );
     expect(chineseHtmlSource).toContain('"applicationCategory": "UtilitiesApplication"');
     expect(englishHtmlSource).toContain('"applicationCategory": "UtilitiesApplication"');
@@ -685,35 +685,32 @@ describe("PayDance Web Preview", () => {
 
     expect(readmeSource).not.toContain("## 近期改进");
     expect(readmeSource).toContain('<h1 align="center">薪跳 PayDance</h1>');
-    expect(readmeSource).toContain("桌面实时工资看板");
-    expect(readmeSource).toContain("在线体验");
-    expect(readmeSource).toContain("Windows 桌面版");
-    expect(readmeSource).toContain("Mr.Baoboer");
+    expect(readmeSource).toContain("手机端实时工资看板");
+    expect(readmeSource).toContain("打开手机端");
+    expect(readmeSource).not.toContain("Windows 桌面版");
+    expect(readmeSource).toContain("Javen");
     for (const heading of [
-      "## 它是什么",
+      "## 项目简介",
       "## 主要功能",
-      "## 获取",
+      "## 使用方式",
       "## 技术栈",
-      "## 开发",
+      "## 本地开发",
       "## 隐私",
-      "## 相关文档",
-      "## 许可",
+      "## 许可与作者",
     ]) {
       expect(readmeSource).toContain(heading);
     }
     expect(readmeSource).not.toContain("## 快速下载与安全校验");
     expect(readmeSource).not.toContain("## 隐私声明、作者与许可");
-    expect(readmeSource).toContain("网页端，含所有核心功能");
-    expect(readmeSource).toContain(
-      "便携 EXE，含托盘、置顶、迷你悬浮、开机自启动等完整能力",
-    );
+    expect(readmeSource).toContain("当前线上入口只提供手机端界面");
+    expect(readmeSource).toContain("Javen");
     expect(readmeSource).not.toContain("poster-01-live-dashboard-v3.png");
     expect(readmeSource).not.toContain(["Mr", "Ba" + "ober"].join("."));
     expect(readmeSource).not.toContain("actions/workflows/ci.yml/badge.svg");
     expect(readmeSource).not.toContain("Web Preview 是产品橱窗，不替代桌面版");
   });
 
-  it("builds the web preview for the Vercel primary site and GitHub Pages mirror", () => {
+  it("builds the mobile app for the Vercel primary site and GitHub Pages mirror", () => {
     const viteConfig = read("vite.config.ts");
 
     expect(viteConfig).toContain("process.env.VERCEL ?");
@@ -724,9 +721,9 @@ describe("PayDance Web Preview", () => {
     );
     expect(viteConfig).toContain('en: resolve(projectRoot, "en/index.html")');
     expect(viteConfig).toContain("createWebSeoPlugin");
-    expect(read("vercel.json")).toContain('"buildCommand": "npm run build:web"');
+    expect(read("vercel.json")).toContain('"buildCommand": "npm run build:mobile"');
     expect(viteConfig).toContain("src-tauri/target/**");
-    expect(read(".github/workflows/web-preview.yml")).toContain("npm run build:web");
+    expect(read(".github/workflows/web-preview.yml")).toContain("npm run build:mobile");
     expect(read(".github/workflows/web-preview.yml")).toContain(
       "actions/upload-pages-artifact@",
     );

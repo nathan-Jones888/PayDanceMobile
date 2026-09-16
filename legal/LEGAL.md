@@ -2,7 +2,7 @@
 
 > [English version →](LEGAL_EN.md)
 
-PayDance 由 Mr.Baoboer 创建并维护，Copyright (C) 2026 Mr.Baoboer。本文汇总各类材料适用的许可，具体条款以链接文件为准。
+PayDance 由 Javen 创建并维护，Copyright (C) 2026 Javen。本文汇总各类材料适用的许可，具体条款以链接文件为准。
 
 ## 软件代码
 

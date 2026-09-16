@@ -4,7 +4,7 @@
 
 This file explains the licensing boundary for official PayDance brand assets. It does not change the software-code rights granted by `LICENSE`. Names, application identifiers, and release channels are governed by the [Trademark Policy](TRADEMARK_EN.md).
 
-Unless authorized in writing, the following official assets are not licensed under AGPL-3.0-only or CC BY-SA 4.0, and all rights in them are reserved by Mr.Baoboer:
+Unless authorized in writing, the following official assets are not licensed under AGPL-3.0-only or CC BY-SA 4.0, and all rights in them are reserved by Javen:
 
 - The PayDance logo, application icon, and tray icon
 - The website visual identity, marketing posters, promotional images, and social preview images
@@ -28,7 +28,7 @@ You may display, reference, or redistribute official brand assets without prior 
 - Provide factual descriptions, reviews, tutorials, news coverage, or security reports about PayDance; or
 - Comply with legal notice and source-attribution requirements.
 
-These uses must not imply that a third-party release is official or that Mr.Baoboer endorses a modified version, product, or service.
+These uses must not imply that a third-party release is official or that Javen endorses a modified version, product, or service.
 
 ## Official screenshots
 

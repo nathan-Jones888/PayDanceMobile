@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -20,7 +20,6 @@ const dependabotSettings = dependabotConfig
 // a RegExp from these names would reintroduce js/incomplete-sanitization.
 const collapsedDependabotSettings = dependabotSettings.replace(/\s+/g, " ");
 const versionedDesktopAssetName = `pay-dance-v${packageJson.version}-windows-x64.exe`;
-const desktopDownloadUrl = `https://github.com/MrBaoboer/PayDance/releases/latest/download/${versionedDesktopAssetName}`;
 const legacyAdditionalTermsReference = `see /${["ADDITIONAL_TERMS", "md"].join(".")}`;
 const binaryExtensions = new Set([".ico", ".png", ".woff2"]);
 const existsInWorktree = (path) => existsSync(resolve(repoRoot, path));
@@ -100,38 +99,23 @@ describe("repository metadata", () => {
     }
   });
 
-  // 中英文 README 都用版本化直链，缺一个就会在发版后静默 404。
-  it("keeps README desktop download links on the versioned Windows release executable", () => {
+  it("keeps both READMEs focused on the mobile app", () => {
     for (const path of ["README.md", "docs/README_EN.md"]) {
       const readme = read(path);
-      const desktopDownloadLinks = readme.match(
-        new RegExp(
-          `https://github\\.com/MrBaoboer/PayDance/releases/latest/download/${versionedDesktopAssetName}`,
-          "g",
-        ),
-      );
-
-      expect(desktopDownloadLinks?.length).toBeGreaterThanOrEqual(1);
-      expect(readme).toContain(desktopDownloadUrl);
-      expect(readme).toContain(versionedDesktopAssetName);
-      expect(readme).not.toContain("releases/download/v0.7.16/pay-dance.exe");
-      expect(readme).not.toContain("mrbaoboer.github.io/PayDance/pay-dance.exe");
+      expect(readme).toContain("mobile");
+      expect(readme).not.toContain(versionedDesktopAssetName);
+      expect(readme).not.toContain("windows-x64.exe");
     }
-
-    // versionedDesktopChecksumName is removed from README to prevent hardcoded version churn
+    expect(read("vercel.json")).toContain('"buildCommand": "npm run build:mobile"');
     expect(read("src/lib/app-meta.ts")).toContain("windowsDownloadAssetName");
   });
 
   it("keeps the English README on its dedicated first-time setup poster", () => {
-    const posterPath = "docs/posters/poster-02-three-step-setup-en-v1.png";
     const englishReadme = read("docs/README_EN.md");
 
-    expect(englishReadme).toContain("https://paydance.vercel.app/en/");
-    expect(englishReadme).not.toContain(
-      '<a href="https://paydance.vercel.app/"><strong>Live Preview</strong></a>',
-    );
-    expect(englishReadme).toContain('src="posters/poster-02-three-step-setup-en-v1.png"');
-    expect(existsInWorktree(posterPath)).toBe(true);
+    expect(englishReadme).toContain("https://paydance.vercel.app/");
+    expect(englishReadme).toContain("mobile interface only");
+    expect(englishReadme).not.toContain("Windows Desktop");
   });
 
   it("keeps English changelog demo wording product-neutral", () => {
@@ -170,11 +154,11 @@ describe("repository metadata", () => {
 
   it("keeps additional terms scoped to AGPL code materials under legal/", () => {
     expect(read("legal/ADDITIONAL_TERMS.md")).toContain(
-      "适用于 Mr.Baoboer 拥有版权并以 AGPL-3.0-only 发布的 PayDance 软件代码材料。",
+      "适用于 Javen 拥有版权并以 AGPL-3.0-only 发布的 PayDance 软件代码材料。",
     );
     expect(read("legal/ADDITIONAL_TERMS.md")).not.toContain("代码与相关材料");
     expect(read("legal/ADDITIONAL_TERMS_EN.md")).toContain(
-      "They apply to PayDance software code materials copyrighted by Mr.Baoboer and released under AGPL-3.0-only.",
+      "They apply to PayDance software code materials copyrighted by Javen and released under AGPL-3.0-only.",
     );
     expect(read("legal/ADDITIONAL_TERMS_EN.md")).not.toContain(
       "code and related materials",
@@ -234,8 +218,7 @@ describe("repository metadata", () => {
     expect(read("docs/GOVERNANCE_EN.md")).toContain("Governance");
     expect(read("docs/MAINTENANCE.md")).toContain("配置迁移");
     expect(read("docs/MAINTENANCE_EN.md")).toContain("Settings Migration");
-    expect(read("README.md")).toContain("docs/ARCHITECTURE.md");
-    expect(read("docs/README_EN.md")).toContain("ARCHITECTURE_EN.md");
+    expect(read("README.md")).toContain("本地开发");
     expect(read("docs/ARCHITECTURE.md")).toContain("修改导航");
     expect(read("docs/ARCHITECTURE_EN.md")).toContain("Change Map");
     expect(read(".github/CONTRIBUTING.md")).toContain("good first issue");
@@ -335,8 +318,8 @@ describe("repository metadata", () => {
     const blockedContactPhrases = [
       ["提交", "历史", "中的", "邮箱"].join(""),
       ["email", "found", "in", "commit", "history"].join(" "),
-      ["contact", "Mr.Baoboer"].join(" "),
-      ["联系", "Mr.Baoboer"].join(" "),
+      ["contact", "Javen"].join(" "),
+      ["联系", "Javen"].join(" "),
     ];
 
     expect(read("docs/SUPPORT.md")).toContain(githubProfile);
@@ -352,12 +335,12 @@ describe("repository metadata", () => {
     }
   });
 
-  it("keeps platform positioning Windows-focused but community-extensible", () => {
+  it("keeps platform positioning mobile-focused in the READMEs", () => {
     expect(read("README.md")).toContain(
-      "薪跳 PayDance 是一款桌面实时工资看板。配置薪资与上下班时间后",
+      "薪跳 PayDance 是一款面向手机端的实时工资看板。",
     );
     expect(read("docs/README_EN.md")).toContain(
-      "PayDance (薪跳) is a desktop real-time salary dashboard.",
+      "PayDance is a real-time wage dashboard designed for phones.",
     );
     expect(read("docs/PRODUCT.md")).toContain("这并不排斥 macOS、Linux 等平台");
     expect(read(".github/CONTRIBUTING.md")).toContain("平台适配贡献需附验证边界");
@@ -376,8 +359,8 @@ describe("repository metadata", () => {
       ["不会", "合并"].join(""),
     ];
 
-    expect(read("README.md")).toContain("网页端，含所有核心功能");
-    expect(read("docs/README_EN.md")).toContain("Browser-based, all core features");
+    expect(read("README.md")).toContain("当前线上入口只提供手机端界面");
+    expect(read("docs/README_EN.md")).toContain("mobile interface only");
     expect(read("docs/ROADMAP.md")).toContain("长期排除方向");
     expect(read("docs/ROADMAP_EN.md")).toContain("Long-Term Exclusions");
 
@@ -392,7 +375,6 @@ describe("repository metadata", () => {
   it("keeps product positioning on the real-time desktop wage board wording", () => {
     const positioning = "桌面实时工资看板";
 
-    expect(read("README.md")).toContain(positioning);
     expect(read("docs/PRODUCT.md")).toContain(positioning);
     expect(read("src/lib/app-meta.ts")).toContain(positioning);
     expect(read("src-tauri/Cargo.toml")).toContain(positioning);

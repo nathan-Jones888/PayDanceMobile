@@ -8,7 +8,7 @@
     "moduleResolution": "Bundler",
     "paths": {
       "#opener": ["./src/platform/opener.ts"],
-      "#runtime-app": ["./src/DesktopApp.vue"],
+      "#runtime-app": ["./src/desktop/DesktopApp.vue"],
       "#settings-store": ["./src/platform/settings-store.ts"],
       "#updater": ["./src/platform/updater.ts"]
     },

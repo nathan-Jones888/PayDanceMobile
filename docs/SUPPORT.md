@@ -25,4 +25,4 @@ Issue 是公开的。请勿附上薪资数据、`salary-settings.json`、私钥�
 
 ## 私下联系
 
-其他不适合公开讨论的项目事项，可使用 [Mr.Baoboer 的 GitHub 主页](https://github.com/MrBaoboer)公示的邮箱。
+其他不适合公开讨论的项目事项，可使用 [Javen 的 GitHub 主页](https://github.com/MrBaoboer)公示的邮箱。

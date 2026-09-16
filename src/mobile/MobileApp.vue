@@ -1,17 +1,17 @@
 <script setup lang="ts">
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
 import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
-import { appName } from "./lib/app-meta";
-import { resolveWindowPreferences } from "./lib/window-mode";
-import { provideCurrency } from "./composables/useCurrency";
-import { useDashboardModel } from "./composables/useDashboardModel";
-import { provideI18n } from "./composables/useI18n";
-import { useSalarySettings } from "./composables/useSalarySettings";
-import { useSalaryTicker } from "./composables/useSalaryTicker";
-import AppWindow from "./components/AppWindow.vue";
+import { appName } from "../lib/app-meta";
+import { resolveWindowPreferences } from "../lib/window-mode";
+import { provideCurrency } from "../composables/useCurrency";
+import { useDashboardModel } from "../composables/useDashboardModel";
+import { provideI18n } from "../composables/useI18n";
+import { useSalarySettings } from "../composables/useSalarySettings";
+import { useSalaryTicker } from "../composables/useSalaryTicker";
+import AppWindow from "../components/AppWindow.vue";
 import type { UpdaterStatus } from "#updater";
 
 const updateStatus: UpdaterStatus = { kind: "unavailable", reason: "web" };
@@ -66,8 +66,7 @@ const setThemeMode = async (mode: "light" | "dark") => {
   await saveStateNow();
 };
 
-const toggleTheme = () =>
-  setThemeMode(themeMode.value === "dark" ? "light" : "dark");
+const toggleTheme = () => setThemeMode(themeMode.value === "dark" ? "light" : "dark");
 
 watch(config, () => void saveStateNow(), { deep: true });
 watch([amountMode, currencySymbol, locale], () => void saveStateNow());

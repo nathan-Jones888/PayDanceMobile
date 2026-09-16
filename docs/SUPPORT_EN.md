@@ -25,4 +25,4 @@ Do not disclose vulnerabilities publicly. Follow the private process in the [Sec
 
 ## Private Contact
 
-For other project matters that should not be discussed publicly, use the email published on [Mr.Baoboer's GitHub profile](https://github.com/MrBaoboer).
+For other project matters that should not be discussed publicly, use the email published on [Javen's GitHub profile](https://github.com/MrBaoboer).

@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -6,7 +6,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import appSource from "./App.vue?raw";
-import desktopAppSource from "./DesktopApp.vue?raw";
+import desktopAppSource from "./desktop/DesktopApp.vue?raw";
 import runtimeSource from "./platform/runtime.ts?raw";
 import themeSyncSource from "./composables/useThemeSync.ts?raw";
 import dashboardModelSource from "./composables/useDashboardModel.ts?raw";
@@ -34,7 +34,7 @@ describe("main dashboard shell", () => {
     expect(appSource).not.toContain("DesktopApp");
   });
 
-  it("keeps DesktopApp.vue as a page shell under the 350-line architecture budget", () => {
+  it("keeps desktop/DesktopApp.vue as a page shell under the 350-line architecture budget", () => {
     expect(desktopAppSource.split(/\r?\n/).length).toBeLessThanOrEqual(350);
     expect(desktopAppSource).not.toContain(':show-desktop-features="false"');
     expect(desktopAppSource).toContain(':show-desktop-features="true"');

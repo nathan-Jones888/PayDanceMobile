@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -18,10 +18,15 @@ const targets = {
     marker: "PayDance Web Preview",
     unexpected: "DesktopApp",
   },
+  mobile: {
+    expected: "mobile",
+    marker: "mobile-app",
+    unexpected: "DesktopApp",
+  },
 };
 
 if (!Object.hasOwn(targets, target)) {
-  throw new Error("Usage: node scripts/assert-build-target.mjs <desktop|web>");
+  throw new Error("Usage: node scripts/assert-build-target.mjs <desktop|web|mobile>");
 }
 
 const distDir = resolve(process.cwd(), "dist");

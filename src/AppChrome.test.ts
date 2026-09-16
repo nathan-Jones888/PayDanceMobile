@@ -1,11 +1,11 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
 
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
-import desktopAppSource from "./DesktopApp.vue?raw";
+import desktopAppSource from "./desktop/DesktopApp.vue?raw";
 import appWindowSource from "./components/AppWindow.vue?raw";
 import miniOpacityPanelSource from "./composables/useMiniOpacityPanel.ts?raw";
 import windowPositionRecoverySource from "./composables/useWindowPositionRecovery.ts?raw";

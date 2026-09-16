@@ -6,7 +6,7 @@ This policy defines how PayDance names, marks, and official channels may be used
 
 ## Protected marks
 
-The following names and source-identifying elements are reserved by the author, Mr.Baoboer:
+The following names and source-identifying elements are reserved by the author, Javen:
 
 - "薪跳", "PayDance", "薪跳 PayDance"
 - Official visual assets such as the PayDance logo, application icon, and tray icon
@@ -31,7 +31,7 @@ Without explicit prior written permission, you may not:
 - Publish a modified version or derivative product under "薪跳", "PayDance", "薪跳 PayDance", or a confusingly similar name
 - Use the official logo, icons, posters, or website visuals as the identity of a modified product
 - Distribute modified versions through official release channels, update endpoints, signing chains, or release asset naming
-- State or imply that a modified version is produced, approved, sponsored, certified, or endorsed by Mr.Baoboer or the PayDance project
+- State or imply that a modified version is produced, approved, sponsored, certified, or endorsed by Javen or the PayDance project
 - Use PayDance branding to promote unrelated products, services, courses, communities, or commercial activities
 
 ## Minimum distinction requirements for modified versions and forks

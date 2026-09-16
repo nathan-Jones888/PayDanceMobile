@@ -7,8 +7,8 @@
 ```mermaid
 flowchart LR
   Entry["main.ts / App.vue"] --> Target["#runtime-app"]
-  Target --> Desktop["DesktopApp.vue"]
-  Target --> Mobile["MobileApp.vue"]
+  Target --> Desktop["desktop/DesktopApp.vue"]
+  Target --> Mobile["mobile/MobileApp.vue"]
   Target --> Web["WebPreviewApp.vue"]
   Desktop --> Shared["components / composables"]
   Mobile --> Shared
@@ -23,7 +23,7 @@ flowchart LR
 ```
 
 - `src/App.vue` 通过 Vite 别名 `#runtime-app` 选择桌面端、移动端或 Web Preview 入口。
-- `src/MobileApp.vue` 复用工资看板、设置和 Tauri Store，不导入窗口、托盘、进程或更新 API。
+- `src/mobile/MobileApp.vue` 复用工资看板、设置和 Tauri Store，不导入窗口、托盘、进程或更新 API。
 - `src/lib/salary/` 是纯工资计算核心；`src/lib/salary.ts` 只负责导出公共接口。
 - `src/composables/` 负责设置、计时、主题和窗口等应用行为，其中桌面窗口 composable 可依赖 Tauri。
 - `src/components/` 包含主看板、设置、首次向导、迷你窗口等界面组件。
@@ -48,10 +48,10 @@ flowchart LR
 | 工资规则、午休、夜班 | `src/lib/salary/` | `npm test -- src/lib/salary` |
 | 薪资设置或迁移 | `src/lib/settings-migration.ts`、`src/lib/settings-store.ts`、`src/composables/useSalarySettings.ts` | `npm test -- src/lib/settings-migration.test.ts src/composables/useSalarySettings.test.ts` |
 | 窗口尺寸、位置或迷你模式 | `src/lib/window-mode.ts`、`src/composables/useWindow*.ts` | `npm test -- src/lib/window-mode.test.ts src/composables/useWindowMode.test.ts src/composables/useWindowPositionRecovery.test.ts` |
-| 主窗口、设置或首次向导 | `src/components/`、`src/styles/`、`src/DesktopApp.vue` | `npm test`、`npm run build:desktop` |
+| 主窗口、设置或首次向导 | `src/components/`、`src/styles/`、`src/desktop/DesktopApp.vue` | `npm test`、`npm run build:desktop` |
 | 界面文案与翻译 | `src/i18n/types.ts`、`src/i18n/locales/zh-CN.ts`、`src/i18n/locales/en.ts` | `npm run build:desktop`（缺键由 `vue-tsc` 报出） |
 | Web Preview 页面、路由或样式 | `src/web-preview/`、`src/WebPreviewApp.vue`、`index.html`、`en/index.html` | `npm run build:web`、`npm run qa:web-preview` |
-| Android / iOS 移动端 | `src/MobileApp.vue`、`src-tauri/capabilities/mobile.json`、`vite.config.ts` | `npm run build:mobile`，再在对应平台执行 `npm run android:dev` 或 `npm run ios:dev` |
+| Android / iOS 移动端 | `src/mobile/MobileApp.vue`、`src-tauri/capabilities/mobile.json`、`vite.config.ts` | `npm run build:mobile`，再在对应平台执行 `npm run android:dev` 或 `npm run ios:dev` |
 | 托盘、单实例或 Rust 窗口事件 | `src-tauri/src/tray.rs`、`src-tauri/src/lib.rs` | `cargo test --manifest-path src-tauri/Cargo.toml`、相关 Vitest |
 | 自启动 | `src/lib/autostart.ts`、`src/composables/useAutostart.ts` | `npm test -- autostart` |
 | 便携版更新与发布 | `src/platform/updater.ts`、`src-tauri/src/portable_update.rs`、`.github/workflows/release.yml` | `npm run verify:release` |

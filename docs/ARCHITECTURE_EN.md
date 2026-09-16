@@ -7,7 +7,7 @@
 ```mermaid
 flowchart LR
   Entry["main.ts / App.vue"] --> Target["#runtime-app"]
-  Target --> Desktop["DesktopApp.vue"]
+  Target --> Desktop["desktop/DesktopApp.vue"]
   Target --> Web["WebPreviewApp.vue"]
   Desktop --> Shared["components / composables"]
   Web --> Preview["Web Preview page and simulated state"]
@@ -45,7 +45,7 @@ flowchart LR
 | Salary rules, lunch, or overnight shifts | `src/lib/salary/` | `npm test -- src/lib/salary` |
 | Salary settings or migration | `src/lib/settings-migration.ts`, `src/lib/settings-store.ts`, `src/composables/useSalarySettings.ts` | `npm test -- src/lib/settings-migration.test.ts src/composables/useSalarySettings.test.ts` |
 | Window size, position, or mini mode | `src/lib/window-mode.ts`, `src/composables/useWindow*.ts` | `npm test -- src/lib/window-mode.test.ts src/composables/useWindowMode.test.ts src/composables/useWindowPositionRecovery.test.ts` |
-| Main window, settings, or onboarding | `src/components/`, `src/styles/`, `src/DesktopApp.vue` | `npm test`, `npm run build:desktop` |
+| Main window, settings, or onboarding | `src/components/`, `src/styles/`, `src/desktop/DesktopApp.vue` | `npm test`, `npm run build:desktop` |
 | UI copy and translations | `src/i18n/types.ts`, `src/i18n/locales/zh-CN.ts`, `src/i18n/locales/en.ts` | `npm run build:desktop` (`vue-tsc` reports missing keys) |
 | Web Preview page, routing, or styles | `src/web-preview/`, `src/WebPreviewApp.vue`, `index.html`, `en/index.html` | `npm run build:web`, `npm run qa:web-preview` |
 | Tray, single instance, or Rust window events | `src-tauri/src/tray.rs`, `src-tauri/src/lib.rs` | `cargo test --manifest-path src-tauri/Cargo.toml`, focused Vitest |

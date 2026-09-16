@@ -2,13 +2,13 @@
 
 > [中文版 →](CLA.md)
 
-This Contributor License Agreement ("CLA") applies only when a contributor explicitly signs this agreement and submits a contribution to the PayDance project (the "Project"), maintained by Mr.Baoboer.
+This Contributor License Agreement ("CLA") applies only when a contributor explicitly signs this agreement and submits a contribution to the PayDance project (the "Project"), maintained by Javen.
 
 By signing this CLA and submitting a contribution—including but not limited to source code, documentation, translations, tests, graphics, or other materials—you agree to the following terms.
 
 ## 1. Grant of license
 
-You grant Mr.Baoboer a perpetual, worldwide, non-exclusive, royalty-free, irrevocable license to:
+You grant Javen a perpetual, worldwide, non-exclusive, royalty-free, irrevocable license to:
 
 - Use, reproduce, modify, adapt, publish, translate, and distribute your contribution as part of the Project under the GNU Affero General Public License v3.0 only (AGPL-3.0-only);
 - License your contribution to third parties as part of any paid commercial, OEM, or other non-AGPL license the Project maintainer offers;

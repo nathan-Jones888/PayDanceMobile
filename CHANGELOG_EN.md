@@ -153,7 +153,7 @@ Build artifacts and verification files are available in [GitHub Releases](https:
 
 - Refined Web Preview subtitle and value tags around tangible labor value, focus, and privacy.
 - Changed Windows download CTA to a direct EXE path and added Windows-style iconography.
-- Corrected author attribution to `Mr.Baoboer` across the repository.
+- Corrected author attribution to `Javen` across the repository.
 
 ### v0.8.7
 

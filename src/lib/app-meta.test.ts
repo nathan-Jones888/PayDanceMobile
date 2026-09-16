@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -29,8 +29,8 @@ describe("app metadata", () => {
   });
 
   it("records the product author attribution", () => {
-    expect(appAuthor).toBe("Mr.Baoboer");
-    expect(appCopyright).toBe("© 2026 Mr.Baoboer");
+    expect(appAuthor).toBe("Javen");
+    expect(appCopyright).toBe("© 2026 Javen");
   });
 
   it("exposes the current app version for about surfaces", () => {

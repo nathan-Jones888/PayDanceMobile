@@ -2,7 +2,7 @@
 
 > [中文版 →](LEGAL.md)
 
-PayDance is created and maintained by Mr.Baoboer. Copyright (C) 2026 Mr.Baoboer. This document summarizes the license that applies to each type of material; the linked files contain the governing terms.
+PayDance is created and maintained by Javen. Copyright (C) 2026 Javen. This document summarizes the license that applies to each type of material; the linked files contain the governing terms.
 
 ## Software Code
 

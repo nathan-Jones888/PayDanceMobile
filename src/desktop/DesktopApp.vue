@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// SPDX-FileCopyrightText: 2026 Mr.Baoboer
+// SPDX-FileCopyrightText: 2026 Javen
 // SPDX-License-Identifier: AGPL-3.0-only
 //
 // Additional terms: see /legal/ADDITIONAL_TERMS.md
@@ -13,28 +13,28 @@ import {
   resolveWindowPreferences,
   type WindowPosition,
   type WindowSize,
-} from "./lib/window-mode";
-import { appName } from "./lib/app-meta";
-import { localeChangedEventName } from "./lib/app-events";
-import { useAppShell } from "./composables/useAppShell";
-import { useAppWindowLifecycle } from "./composables/useAppWindowLifecycle";
-import { useAutostart } from "./composables/useAutostart";
-import { provideCurrency } from "./composables/useCurrency";
-import { useDashboardModel } from "./composables/useDashboardModel";
-import { provideI18n } from "./composables/useI18n";
-import { useMiniWindowDrag } from "./composables/useMiniWindowDrag";
-import { useMiniOpacityPanel } from "./composables/useMiniOpacityPanel";
-import { useSalarySettings } from "./composables/useSalarySettings";
-import { useSalaryTicker } from "./composables/useSalaryTicker";
-import { useThemeSync } from "./composables/useThemeSync";
-import { registerTrayActions } from "./composables/useTrayActions";
-import { useWindowMode } from "./composables/useWindowMode";
-import { useWindowPositionRecovery } from "./composables/useWindowPositionRecovery";
-import { useWindowStatePersistence } from "./composables/useWindowStatePersistence";
+} from "../lib/window-mode";
+import { appName } from "../lib/app-meta";
+import { localeChangedEventName } from "../lib/app-events";
+import { useAppShell } from "../composables/useAppShell";
+import { useAppWindowLifecycle } from "../composables/useAppWindowLifecycle";
+import { useAutostart } from "../composables/useAutostart";
+import { provideCurrency } from "../composables/useCurrency";
+import { useDashboardModel } from "../composables/useDashboardModel";
+import { provideI18n } from "../composables/useI18n";
+import { useMiniWindowDrag } from "../composables/useMiniWindowDrag";
+import { useMiniOpacityPanel } from "../composables/useMiniOpacityPanel";
+import { useSalarySettings } from "../composables/useSalarySettings";
+import { useSalaryTicker } from "../composables/useSalaryTicker";
+import { useThemeSync } from "../composables/useThemeSync";
+import { registerTrayActions } from "../composables/useTrayActions";
+import { useWindowMode } from "../composables/useWindowMode";
+import { useWindowPositionRecovery } from "../composables/useWindowPositionRecovery";
+import { useWindowStatePersistence } from "../composables/useWindowStatePersistence";
 import { checkForUpdate, type UpdaterStatus } from "#updater";
-import AppWindow from "./components/AppWindow.vue";
-import MiniWindow from "./components/MiniWindow.vue";
-import MiniOpacityPanel from "./components/MiniOpacityPanel.vue";
+import AppWindow from "../components/AppWindow.vue";
+import MiniWindow from "../components/MiniWindow.vue";
+import MiniOpacityPanel from "../components/MiniOpacityPanel.vue";
 const appWindow = getCurrentWindow();
 const isOpacityPanelWindow = appWindow.label === "mini-opacity";
 const updateStatus = ref<UpdaterStatus>({ kind: "upToDate" });
