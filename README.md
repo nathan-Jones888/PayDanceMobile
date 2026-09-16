@@ -10,8 +10,6 @@
 
 <p align="center">
   <a href="https://paydance.vercel.app/"><strong>打开手机端</strong></a>
-  &nbsp;&nbsp;·&nbsp;&nbsp;
-  <a href="LICENSE"><strong>AGPL-3.0-only</strong></a>
 </p>
 
 ---
@@ -78,4 +76,4 @@ Vue 3、TypeScript、Vite、Tauri 2 和 Rust。
 
 ## 许可与作者
 
-薪跳 PayDance 由 **Javen** 设计与开发，代码以 [AGPL-3.0-only](LICENSE) 发布。
+薪跳 PayDance 由 **Javen** 设计与开发
