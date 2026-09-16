@@ -1,7 +1,7 @@
 {
   "name": "pay-dance",
   "private": true,
-  "version": "0.9.9",
+  "version": "1.0.0",
   "author": "Javen",
   "license": "AGPL-3.0-only",
   "repository": "github:nathan-Jones888/PayDanceMobile",
@@ -40,7 +40,7 @@
     "tauri": "tauri",
     "android:init": "tauri android init --ci",
     "android:dev": "tauri android dev",
-    "android:build": "tauri android build",
+    "android:build": "node scripts/configure-android-signing.mjs && tauri android build",
     "ios:init": "tauri ios init --ci",
     "ios:dev": "tauri ios dev",
     "ios:build": "tauri ios build"

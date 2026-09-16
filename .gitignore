@@ -9,6 +9,7 @@ diet-vision-backend/
 *.py[cod]
 .npm-cache
 release-assets/
+android-signing/
 .vercel/
 .tools
 /tmp/

@@ -61,6 +61,7 @@ export function useSalarySettings(
   const isSettingsReady = ref(false);
   const settingsSaveError = ref("");
   let storePromise: Promise<SettingsStoreAdapter> | null = null;
+  let saveQueue = Promise.resolve();
 
   const getStore = () => {
     storePromise ??= storeLoader();
@@ -257,7 +258,7 @@ export function useSalarySettings(
     }
   };
 
-  const saveSettings = async ({
+  const persistSettings = async ({
     isMiniMode,
     fullSize,
     miniSize,
@@ -316,6 +317,15 @@ export function useSalarySettings(
       console.error("Failed to save settings", error);
       settingsSaveError.value = "settings.saveFailed";
     }
+  };
+
+  const saveSettings = (state: PersistedWindowState) => {
+    const nextSave = saveQueue.then(() => persistSettings(state));
+    saveQueue = nextSave.then(
+      () => undefined,
+      () => undefined,
+    );
+    return nextSave;
   };
 
   return {

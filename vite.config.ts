@@ -59,7 +59,9 @@ export default defineConfig(({ mode }) => {
           new URL(
             isWeb
               ? "./src/platform/settings-store.web.ts"
-              : "./src/platform/settings-store.ts",
+              : isMobile
+                ? "./src/platform/settings-store.mobile.ts"
+                : "./src/platform/settings-store.ts",
             import.meta.url,
           ),
         ),
